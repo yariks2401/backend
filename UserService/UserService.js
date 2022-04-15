@@ -1,16 +1,18 @@
-const User = require("../models/userModel");
-
 class DataSet {
 
-    constructor() {}
-    getAllUsers = async () => {
+    constructor(UserModel, APIFeatures) {
+        this.APIFeaturesObj = APIFeatures;
+        this.UserModelObj = UserModel;
+    }
+    getAllUsers = async (query) => {
         try {
-           const users = await User.find()
+            const features = new this.APIFeaturesObj(this.UserModelObj.find(), query).filter().sort().limitFields().paginate();
+            const responseData = await features.query;
             return {
                 statusCode: 200,
                 info: {
                     status: 'success',
-                    data: { users },
+                    data: { responseData },
                 }
             }
         } catch (err){
@@ -28,7 +30,7 @@ class DataSet {
     getUserById = async (id) => {
         try {
             console.log(id);
-            const user =  await User.findById(id);
+            const user =  await this.UserModelObj.findById(id);
             return {
                 statusCode: 200,
                 info: {
@@ -50,7 +52,7 @@ class DataSet {
 
     setNewUser = async (data) => {
         try {
-            const user = await User.create(data)
+            const user = await this.UserModelObj.create(data)
             return {
                 statusCode: 201,
                 info: {
@@ -73,7 +75,7 @@ class DataSet {
 
     updateUserById = async (id, data) => {
         try {
-            const user = await User.findByIdAndUpdate(id, data, {
+            const user = await this.UserModelObj.findByIdAndUpdate(id, data, {
                 new: true,
                 runValidators: true
             })
@@ -98,7 +100,7 @@ class DataSet {
 
     deleteUserById = async (id) => {
         try {
-            await User.findByIdAndDelete(id)
+            await this.UserModelObj.findByIdAndDelete(id)
             return {
                 statusCode: 204,
                 info: {
@@ -120,4 +122,4 @@ class DataSet {
 
 }
 
-module.exports = new DataSet();
+module.exports = DataSet;
