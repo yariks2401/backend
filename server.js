@@ -1,9 +1,11 @@
+require('dotenv').config();
 const mongoose = require('mongoose')
-const dotenv = require('dotenv')
 const app = require('./app')
 const port = 3000;
 
-mongoose.connect('mongodb+srv://yariks2401:64meposo!Crm@cluster0.9e6ww.mongodb.net/Crm_System?retryWrites=true&w=majority',{
+const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
+
+mongoose.connect(DB,{
     useNewUrlParser: true,
     useCreateIndex: true,
     useFindAndModify: false,
@@ -12,12 +14,6 @@ mongoose.connect('mongodb+srv://yariks2401:64meposo!Crm@cluster0.9e6ww.mongodb.n
     console.log('Db connections successful!!!');
 })
 
-dotenv.config = ({
-    path: './config.env'
-})
-
-console.log('Hey');
-
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || port, () => {
     console.log('App was started')
 })
