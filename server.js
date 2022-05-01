@@ -16,6 +16,8 @@ dotenv.config = ({
     path: './config.env'
 })
 
+console.log('Hey');
+
 app.listen(process.env.PORT || 3000, () => {
     console.log('App was started')
 })
